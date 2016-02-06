@@ -1,2 +1,2 @@
-# grand-fromage
+# Grand Fromage
 Monitoring system
