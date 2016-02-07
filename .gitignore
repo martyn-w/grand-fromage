@@ -61,5 +61,14 @@ target/
 #Ipython Notebook
 .ipynb_checkpoints
 
-#idea
+# PyCharm
 .idea/
+
+# virtualenv
+venv/
+
+grandfromage/gps.py
+grandfromage/client.py
+grandfromage/misc.py
+grandfromage/fake.py
+
