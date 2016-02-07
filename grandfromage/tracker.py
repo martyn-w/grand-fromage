@@ -32,7 +32,7 @@ class Tracker:
         if (self.previous_tpv is None and self.latest_tpv is not None):
             return True
         elif (self.previous_tpv is not None and self.latest_tpv is not None):
-            delta = geopy.distance.vincenty(self.previous_tpv.lat_lon, self.latest_tpv.lat_lon).meters
+            delta = geopy.distance.vincenty(self.previous_tpv.lat_lon(), self.latest_tpv.lat_lon()).meters
             return delta > settings.TRACKER_SIGNIFICANT_DISTANCE_METERS
         else:
             return False
@@ -55,11 +55,11 @@ class Tracker:
             # measurements is less than the threshold, we should only set the previous_tpv WHEN a significant change is
             # identified, i.e. NOT on every report
             if self.significant_change():
-                paho.mqtt.publish(self.FULL_TOPIC_CHANGE, self.latest_tpv.json())
+                paho.mqtt.publish.single(self.FULL_TOPIC_CHANGE, self.latest_tpv.json())
                 self.previous_tpv = self.latest_tpv
 
             if self.significant_ping():
-                paho.mqtt.publish(self.FULL_TOPIC_PING, self.latest_tpv.json())
+                paho.mqtt.publish.single(self.FULL_TOPIC_PING, self.latest_tpv.json())
                 self.last_ping = datetime.datetime.now()
 
     def run(self):
