@@ -1,11 +1,9 @@
-#print "IN MAIN.PY"
-
 from __init__ import *
 import argparse
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Grand Fromage")
+    parser = argparse.ArgumentParser(description="GrandFromage")
     parser.add_argument('command')
     parser.add_argument('--version', action='version', version='%(prog)s 0.1')
     #print parser

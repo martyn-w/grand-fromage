@@ -2,10 +2,10 @@
 
 __author__ = 'Martyn Whitwell'
 __email__ = 'martyn.whitwell()gmail.com'
-__version__ = '0.1.0'
+__version__ = '0.2.0'
 
 
-import gps # make sure you have installed gpsd on your system in order to use this library
+from gps3.agps3threaded import AGPS3mechanism
 import paho.mqtt.publish
 import json
 import datetime
@@ -22,6 +22,10 @@ class Tracker:
     FULL_TOPIC_PING = "{}/{}".format(FULL_TOPIC, "ping")
 
     def __init__(self):
+        #agps_thread = AGPS3mechanism()  # Instantiate AGPS3 Mechanisms
+        #agps_thread.stream_data()  # From localhost (), or other hosts, by example, (host='gps.ddns.net')
+        #agps_thread.run_thread()  # Throttle time to sleep after an empty lookup, default 0.2 second, default daemon=True
+
         self.session = gps.gps()
         self.session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
         self.previous_tpv = None
