@@ -13,6 +13,6 @@ RUN apt-get -q update \
 
 RUN adduser --system --disabled-password --disabled-login mosquitto
 
-COPY ./config /mqtt/config
+COPY ./config /mosquitto/config
 
-CMD /usr/sbin/mosquitto -c /mqtt/config/mosquitto.conf
+CMD /usr/sbin/mosquitto -c /mosquitto/config/mosquitto.conf

@@ -1,9 +1,9 @@
 version: '2'
 
 volumes:
-  mqtt-data:
-  mqtt-log:
-  mqtt-config:
+  mosquitto-data: {}
+  mosquitto-log: {}
+  mosquitto-config: {}
 
 services:
   display:
@@ -11,12 +11,12 @@ services:
     privileged: true
     restart: always
 
-  mqtt:
-    build: ./mqtt
+  mosquitto:
+    build: ./mosquitto
     volumes:
-      - "mqtt-config:/mqtt/config"
-      - "mqtt-data:/mqtt/data"
-      - "mqtt-log:/mqtt/log"
+      - "mosquitto-config:/mosquitto/config"
+      - "mosquitto-data:/mosquitto/data"
+      #- "mosquitto-log:/mosquitto/log"
     expose:
       - "1883"
       - "9001"
