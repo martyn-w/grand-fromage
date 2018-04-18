@@ -1,4 +1,10 @@
 version: '2'
+
+volumes:
+  mqtt-data:
+  mqtt-logs:
+  mqtt-config:
+
 services:
   display:
     build: ./display
@@ -8,9 +14,9 @@ services:
   mqtt:
     build: ./mqtt
     volumes:
-      - "/mqtt/config"
-      - "/mqtt/data"
-      - "/mqtt/log"
+      - "mqtt-config:/mqtt/config"
+      - "mqtt-data:/mqtt/data"
+      - "mqtt-log:/mqtt/log"
     expose:
       - "1883"
       - "9001"
