@@ -1,6 +1,5 @@
 # Based on https://github.com/resin-io-playground/resinio-PaPiRus
 
-#FROM resin/rpi-raspbian:latest
 FROM resin/rpi-raspbian:jessie
 
 # Install needed packages
