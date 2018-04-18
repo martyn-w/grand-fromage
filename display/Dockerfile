@@ -8,7 +8,7 @@ RUN apt-get -q update \
     libfuse-dev fonts-freefont-ttf \
     git bc i2c-tools \
     pkg-config make gcc \
-    python-imaging python-smbus python-dateutil \
+    python-imaging python-smbus python-dateutil python-pip \
     # Remove package lists to free up space
     && rm -rf /var/lib/apt/lists/*
 
@@ -34,8 +34,11 @@ RUN mkdir -p /tmp/papirus \
     && cd / \
     && rm -rf /tmp/papirus
 
+# install mqtt python libraries
+RUN pip install paho-mqtt
+
 COPY ./epd-fuse/epd-fuse.configuration /etc/default/epd-fuse
-COPY ./bin/docker-entrypoint.sh /bin/docker-entrypoint.sh
+COPY ./bin/docker-entrypoint.sh ./bin/display.py /bin/
 
 
 # Systemd please

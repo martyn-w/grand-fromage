@@ -10,4 +10,4 @@ modprobe i2c-dev
 # Start the fuse driver
 systemctl start epd-fuse.service
 
-papirus-clock
+python /bin/display.py
