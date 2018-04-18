@@ -37,6 +37,9 @@ RUN mkdir -p /tmp/papirus \
 COPY ./epd-fuse/epd-fuse.configuration /etc/default/epd-fuse
 COPY ./bin/docker-entrypoint.sh /bin/docker-entrypoint.sh
 
+# Set timezone
+RUN echo "${TIMEZONE=UTC}" > /etc/timezone \
+    && dpkg-reconfigure tzdata
 
 # Systemd please
 ENV INITSYSTEM on

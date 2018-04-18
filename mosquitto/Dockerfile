@@ -11,7 +11,11 @@ RUN apt-get -q update \
     # Remove package lists to free up space
     && rm -rf /var/lib/apt/lists/*
 
-RUN adduser --system --disabled-password --disabled-login mosquitto
+RUN adduser --system --disabled-password --disabled-login mosquitto \
+    && mkdir -p /mosquitto/log /mosquitto/data \
+    && chown -rf mosquitto:mosquitto /mosquitto/log /mosquitto/data \
+    && echo "${TIMEZONE=UTC}" > /etc/timezone \
+    && dpkg-reconfigure tzdata
 
 COPY ./config /mosquitto/config
 
