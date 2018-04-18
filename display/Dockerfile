@@ -8,7 +8,7 @@ RUN apt-get -q update \
     libfuse-dev fonts-freefont-ttf \
     git bc i2c-tools \
     pkg-config make gcc \
-    python-imaging python-smbus python-dateutil python-pip \
+    python-imaging python-smbus python-dateutil python-pip vim \
     # Remove package lists to free up space
     && rm -rf /var/lib/apt/lists/*
 

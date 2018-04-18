@@ -27,6 +27,8 @@ from PIL import ImageFont
 from datetime import datetime
 import time
 from papirus import Papirus
+from papirus import LM75B
+import paho.mqtt.client as mqtt
 
 # Check EPD_SIZE is defined
 EPD_SIZE=0.0
@@ -72,22 +74,31 @@ def demo(papirus):
     draw = ImageDraw.Draw(image)
     width, height = image.size
 
-    clock_font_size = int((width - 4)/(8*0.65))      # 8 chars HH:MM:SS
+    clock_font_size = int(((width*0.5) - 4)/(5*0.65))      # 5 chars HH:MM
     clock_font = ImageFont.truetype(CLOCK_FONT_FILE, clock_font_size)
+
     date_font_size = int((width - 10)/(10*0.65))     # 10 chars YYYY-MM-DD
     date_font = ImageFont.truetype(DATE_FONT_FILE, date_font_size)
 
+    temp_font_size = int(((width*0.5) - 4)/(5*0.65))      # 5 chars 29 ^C
+    temp_font = ImageFont.truetype(DATE_FONT_FILE, temp_font_size)
+
     # clear the display buffer
     draw.rectangle((0, 0, width, height), fill=WHITE, outline=WHITE)
-    previous_second = 0
+    previous_minute = 0
     previous_day = 0
+    sensor = LM75B()
+    previous_temp = ''
 
     while True:
         while True:
             now = datetime.today()
-            if now.second != previous_second:
+            tempC = '{c:.0f}'.format(c=sensor.getTempCFloat()) + u" \u00b0" + 'C'
+
+            if now.minute != previous_minute or tempC != previous_temp:
                 break
-            time.sleep(0.1)
+
+            time.sleep(0.5)
 
         if now.day != previous_day:
             draw.rectangle((2, 2, width - 2, height - 2), fill=WHITE, outline=BLACK)
@@ -96,15 +107,21 @@ def demo(papirus):
         else:
             draw.rectangle((5, 10, width - 5, 10 + clock_font_size), fill=WHITE, outline=WHITE)
 
-        draw.text((5, 10), '{h:02d}:{m:02d}:{s:02d}'.format(h=now.hour, m=now.minute, s=now.second), fill=BLACK, font=clock_font)
+        draw.text((5, 10), '{h:02d}:{m:02d}'.format(h=now.hour, m=now.minute), fill=BLACK, font=clock_font)
+
+        print('Temperature from LM75B: ' + tempC)
+        draw.text((104, 10), tempC, fill=BLACK, font=temp_font)
+
+
 
         # display image on the panel
         papirus.display(image)
-        if now.second < previous_second:
-            papirus.update()    # full update every minute
+        if now.minute < previous_minute:
+            papirus.update()    # full update every hour
         else:
             papirus.partial_update()
-        previous_second = now.second
+        previous_minute = now.minute
+        previous_temp = tempC
 
 # main
 if "__main__" == __name__:
