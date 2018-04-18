@@ -11,12 +11,9 @@ RUN apt-get -q update \
     # Remove package lists to free up space
     && rm -rf /var/lib/apt/lists/*
 
-RUN adduser --system --disabled-password --disabled-login mosquitto \
-    && mkdir -p /mosquitto/log /mosquitto/data \
-    && chown -Rf mosquitto:mosquitto /mosquitto/log /mosquitto/data \
-    && echo "${TIMEZONE=UTC}" > /etc/timezone \
-    && dpkg-reconfigure tzdata
+RUN adduser --system --disabled-password --disabled-login mosquitto
 
 COPY ./config /mosquitto/config
+COPY ./bin/docker-entrypoint.sh /bin/docker-entrypoint.sh
 
-CMD /usr/sbin/mosquitto -c /mosquitto/config/mosquitto.conf
+CMD ["bash", "/bin/docker-entrypoint.sh"]

@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Set timezone
+echo "${TIMEZONE=UTC}" > /etc/timezone
+dpkg-reconfigure tzdata
+
 # Make sure i2c is loaded
 modprobe i2c-dev
 
