@@ -4,3 +4,13 @@ services:
     build: ./display
     privileged: true
     restart: always
+
+  mqtt:
+    build: ./mqtt
+    volumes:
+      - "/mqtt/config"
+      - "/mqtt/data"
+      - "/mqtt/log"
+    expose:
+      - "1883"
+      - "9001"
