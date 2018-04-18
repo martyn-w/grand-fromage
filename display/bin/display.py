@@ -93,7 +93,7 @@ def demo(papirus):
     while True:
         while True:
             now = datetime.today()
-            tempC = '{c:.0f}'.format(c=sensor.getTempCFloat()) + u" \u00b0" + 'C'
+            tempC = '{c:.0f}'.format(c=sensor.getTempCFloat()) + u"\u00b0" + 'C'
 
             if now.minute != previous_minute or tempC != previous_temp:
                 break
@@ -108,11 +108,7 @@ def demo(papirus):
             draw.rectangle((5, 10, width - 5, 10 + clock_font_size), fill=WHITE, outline=WHITE)
 
         draw.text((5, 10), '{h:02d}:{m:02d}'.format(h=now.hour, m=now.minute), fill=BLACK, font=clock_font)
-
-        print('Temperature from LM75B: ' + tempC)
         draw.text((104, 10), tempC, fill=BLACK, font=temp_font)
-
-
 
         # display image on the panel
         papirus.display(image)
