@@ -35,7 +35,7 @@ RUN mkdir -p /tmp/papirus \
     && rm -rf /tmp/papirus
 
 COPY ./epd-fuse/epd-fuse.configuration /etc/default/epd-fuse
-COPY ./docker-entrypoint.sh /bin/docker-entrypoint.sh
+COPY ./bin/docker-entrypoint.sh /bin/docker-entrypoint.sh
 
 
 # Systemd please
