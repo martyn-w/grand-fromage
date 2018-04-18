@@ -1,0 +1,6 @@
+version: '2'
+services:
+  display:
+    build: ./display
+    privileged: true
+    restart: always
