@@ -19,6 +19,6 @@ services:
       - "mosquitto-config:/mosquitto/config"
       - "mosquitto-data:/mosquitto/data"
       - "mosquitto-log:/mosquitto/log"
-    expose:
+    ports:
       - "1883:1883"
       - "9001:9001"
