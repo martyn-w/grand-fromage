@@ -37,8 +37,8 @@ RUN mkdir -p /tmp/papirus \
 # install mqtt python libraries
 RUN pip install paho-mqtt
 
-COPY ./display/epd-fuse/epd-fuse.configuration /etc/default/epd-fuse
-COPY ./display/bin/docker-entrypoint.sh /bin/
+COPY ./epd-fuse/epd-fuse.configuration /etc/default/epd-fuse
+COPY ./bin/docker-entrypoint.sh /bin/
 COPY ./grandfromage/display.py /bin/
 
 

@@ -12,4 +12,6 @@ echo "finished modprobe"
 # Start the fuse driver
 systemctl start epd-fuse.service
 
+ln -sf /grandfromage/display.py /bin/display.py
+
 python /bin/display.py
