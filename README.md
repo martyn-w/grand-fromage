@@ -1,2 +1,2 @@
 # Grand Fromage
-Monitoring system
+Monitoring system using resin.io and a Raspberry Pi.
