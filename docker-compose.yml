@@ -13,7 +13,7 @@ services:
     depends_on:
       - mosquitto
     volumes:
-      - "./grandfromage:/grandfromage:ro"
+      - "./grandfromage:/grandfromage"
 
   mosquitto:
     build: ./mosquitto
