@@ -6,14 +6,14 @@ volumes:
   mosquitto-config: {}
 
 services:
-#  display:
-#    build:
-#      context: ./
-#      dockerfile: ./display/Dockerfile
-#    privileged: true
-#    restart: always
-#    depends_on:
-#      - mosquitto
+  display:
+    build:
+      context: ./
+      dockerfile: ./display/Dockerfile
+    privileged: true
+    restart: always
+    depends_on:
+      - mosquitto
 
   mosquitto:
     build: ./mosquitto
