@@ -7,9 +7,7 @@ volumes:
 
 services:
   display:
-    build:
-      context: .
-      dockerfile: /display/Dockerfile
+    build: ./display
     privileged: true
     restart: always
     depends_on:
