@@ -39,8 +39,7 @@ RUN pip install paho-mqtt
 
 COPY ./epd-fuse/epd-fuse.configuration /etc/default/epd-fuse
 COPY ./bin/docker-entrypoint.sh /bin/
-COPY ./grandfromage/display.py /bin/
-
+COPY ./grandfromage/ /grandfromage/
 
 # Systemd please
 ENV INITSYSTEM on
