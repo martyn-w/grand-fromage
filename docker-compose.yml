@@ -12,8 +12,6 @@ services:
     restart: always
     depends_on:
       - mosquitto
-    volumes:
-      - "./grandfromage:/grandfromage"
 
   mosquitto:
     build: ./mosquitto
