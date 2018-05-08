@@ -59,7 +59,6 @@ def main(argv):
 
     papirus = Papirus(rotation = int(argv[0]) if len(sys.argv) > 1 else 0)
     print('panel = {p:s} {w:d} x {h:d}  version={v:s} COG={g:d} FILM={f:d}'.format(p=papirus.panel, w=papirus.width, h=papirus.height, v=papirus.version, g=papirus.cog, f=papirus.film))
-    print('MW TEST')
     papirus.clear()
     demo(papirus)
 
@@ -74,7 +73,7 @@ def demo(papirus):
     draw = ImageDraw.Draw(image)
     width, height = image.size
 
-    clock_font_size = int(((width*0.5) - 4)/(5*0.65))      # 5 chars HH:MM
+    clock_font_size = int(((width*0.25) - 4)/(5*0.65))      # 5 chars HH:MM
     clock_font = ImageFont.truetype(CLOCK_FONT_FILE, clock_font_size)
 
     date_font_size = int((width - 10)/(10*0.65))     # 10 chars YYYY-MM-DD
@@ -107,7 +106,9 @@ def demo(papirus):
         else:
             draw.rectangle((5, 10, width - 5, 10 + clock_font_size), fill=WHITE, outline=WHITE)
 
-        draw.text((5, 10), '{h:02d}:{m:02d}'.format(h=now.hour, m=now.minute), fill=BLACK, font=clock_font)
+        #draw.text((5, 10), '{h:02d}:{m:02d}'.format(h=now.hour, m=now.minute), fill=BLACK, font=clock_font)
+        draw_clock(draw, now, clock_font)
+
         draw.text((104, 10), tempC, fill=BLACK, font=temp_font)
 
         # display image on the panel
@@ -118,6 +119,12 @@ def demo(papirus):
             papirus.partial_update()
         previous_minute = now.minute
         previous_temp = tempC
+
+
+def draw_clock(draw, time, font):
+    draw.text((5, 10), '{h:02d}{sep}{m:02d}'.format(h=time.hour, m=time.minute, sep=':' if time.second & 1 else ' '), fill=BLACK, font=font)
+    
+
 
 # main
 if "__main__" == __name__:
