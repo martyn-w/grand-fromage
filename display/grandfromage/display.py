@@ -50,15 +50,12 @@ if not (os.path.exists('/dev/gpiomem') and os.access('/dev/gpiomem', os.R_OK | o
 
 
 
-
-
-
 class Display:
     WHITE = 1
     BLACK = 0
 
-    CLOCK_FONT_FILE = '/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf'
-    DATE_FONT_FILE  = '/usr/share/fonts/truetype/freefont/FreeMono.ttf'
+    BOLD_FONT_FILE = '/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf'
+    PLAIN_FONT_FILE  = '/usr/share/fonts/truetype/freefont/FreeMono.ttf'
 
 
     def __init__(self, rotation):
@@ -69,11 +66,6 @@ class Display:
                                                                                        v=self.papirus.version, g=self.papirus.cog,
                                                                                        f=self.papirus.film))
         self.papirus.clear()
-        #self.demo()
-
-
-    def demo(self):
-        """simple partial update demo - draw a clock"""
 
         # initially set all white background
         self.image = Image.new('1', self.papirus.size, self.WHITE)
@@ -82,45 +74,44 @@ class Display:
         self.draw = ImageDraw.Draw(self.image)
         self.width, self.height = self.image.size
 
-        clock_font_size = int(((self.width * 0.25) - 4) / (5 * 0.65))  # 5 chars HH:MM
-        clock_font = ImageFont.truetype(self.CLOCK_FONT_FILE, clock_font_size)
+        self.sensor = LM75B()
 
-        date_font_size = int((self.width - 10) / (10 * 0.65))  # 10 chars YYYY-MM-DD
-        date_font = ImageFont.truetype(self.DATE_FONT_FILE, date_font_size)
-
-        temp_font_size = int(((self.width * 0.5) - 4) / (5 * 0.65))  # 5 chars 29 ^C
-        temp_font = ImageFont.truetype(self.DATE_FONT_FILE, temp_font_size)
+        self.clock_font = ImageFont.truetype(self.BOLD_FONT_FILE, 15)
+        self.date_font = ImageFont.truetype(self.PLAIN_FONT_FILE, 15)
+        self.temp_font = ImageFont.truetype(self.BOLD_FONT_FILE, 15)
 
         # clear the display buffer
-        self.draw_border()
-        self.draw.rectangle((0, 0, self.width, self.height), fill=self.WHITE, outline=self.WHITE)
+        self.clear_display_buffer()
+
+
+
+
+    def demo(self):
+        previous_second = 0
         previous_minute = 0
         previous_day = 0
-        sensor = LM75B()
-        previous_temp = ''
+        previous_tempC = ''
+
+        self.clear_display_buffer()
+
 
         while True:
             while True:
                 now = datetime.today()
-                tempC = '{c:.0f}'.format(c=sensor.getTempCFloat()) + u"\u00b0" + 'C'
-
-                if now.minute != previous_minute or tempC != previous_temp:
+                if now.second != previous_second:
                     break
-
                 time.sleep(0.5)
 
+            self.draw_clock(now)
+
+            tempC = self.get_temp()
+            if tempC != previous_tempC:
+                self.draw_temp(tempC)
+                previous_tempC = tempC
+
             if now.day != previous_day:
-                self.draw.rectangle((2, 2, self.width - 2, self.height - 2), fill=self.WHITE, outline=self.BLACK)
-                self.draw.text((10, clock_font_size + 10), '{y:04d}-{m:02d}-{d:02d}'.format(y=now.year, m=now.month, d=now.day),
-                          fill=self.BLACK, font=date_font)
+                self.draw_date(now)
                 previous_day = now.day
-            else:
-                self.draw.rectangle((5, 10, self.width - 5, 10 + clock_font_size), fill=self.WHITE, outline=self.WHITE)
-
-            # draw.text((5, 10), '{h:02d}:{m:02d}'.format(h=now.hour, m=now.minute), fill=BLACK, font=clock_font)
-            self.draw_clock(now, clock_font)
-
-            self.draw.text((104, 10), tempC, fill=self.BLACK, font=temp_font)
 
             # display image on the panel
             self.papirus.display(self.image)
@@ -128,21 +119,35 @@ class Display:
                 self.papirus.update()  # full update every hour
             else:
                 self.papirus.partial_update()
+
             previous_minute = now.minute
-            previous_temp = tempC
 
 
-    def clear_display(self):
-        print("clear display")
 
 
-    def draw_border(self):
-        print("draw border")
+    def get_temp(self):
+        return '{c:.0f}'.format(c=self.sensor.getTempCFloat()) + u"\u00b0" + 'C'
 
 
-    def draw_clock(self, time, font):
-        self.draw.text((5, 10), '{h:02d}{sep}{m:02d}'.format(h=time.hour, m=time.minute, sep=':' if time.second & 1 else ' '),
-                  fill=self.BLACK, font=font)
+    def clear_display_buffer(self):
+        self.draw.rectangle((0, 0, self.width, self.height), fill=self.WHITE, outline=self.WHITE)
+        self.draw.rectangle((1, 1, self.width - 2, self.height - 2), fill=self.WHITE, outline=self.BLACK)
+
+
+
+    def draw_clock(self, time):
+        self.draw.rectangle((2, 3, 48, 15), fill=self.WHITE, outline=self.WHITE)
+        self.draw.text((3, 3), '{h:02d}{sep}{m:02d}'.format(h=time.hour, m=time.minute, sep=':' if time.second & 1 else ' '),
+                  fill=self.BLACK, font=self.clock_font)
+
+    def draw_date(self, time):
+        self.draw.rectangle((59, 3, 150, 15), fill=self.WHITE, outline=self.WHITE)
+        self.draw.text((60, 3),
+                       '{y:04d}-{m:02d}-{d:02d}'.format(y=time.year, m=time.month, d=time.day), fill=self.BLACK, font=self.date_font)
+
+    def draw_temp(self, tempC):
+        self.draw.rectangle((159, 3, 197, 15), fill=self.WHITE, outline=self.WHITE)
+        self.draw.text((160, 3), tempC, fill=self.BLACK, font=self.temp_font)
 
 
 
@@ -150,13 +155,6 @@ def main(argv):
     """main program - draw and display time and date"""
     display = Display(int(argv[0]) if len(sys.argv) > 1 else 0)
     display.demo()
-
-
-    # papirus = Papirus(rotation = )
-    # print('panel = {p:s} {w:d} x {h:d}  version={v:s} COG={g:d} FILM={f:d}'.format(p=papirus.panel, w=papirus.width, h=papirus.height, v=papirus.version, g=papirus.cog, f=papirus.film))
-    # papirus.clear()
-    # demo(papirus)
-
 
 
 # main
