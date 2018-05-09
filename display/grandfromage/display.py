@@ -30,6 +30,8 @@ from papirus import Papirus
 from papirus import LM75B
 import paho.mqtt.client as mqtt
 
+
+
 # Check EPD_SIZE is defined
 EPD_SIZE=0.0
 if os.path.exists('/etc/default/epd-fuse'):
@@ -45,85 +47,20 @@ if not (os.path.exists('/dev/gpiomem') and os.access('/dev/gpiomem', os.R_OK | o
         print("Please run script as root")
         sys.exit()
 
-WHITE = 1
-BLACK = 0
-
-CLOCK_FONT_FILE = '/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf'
-DATE_FONT_FILE  = '/usr/share/fonts/truetype/freefont/FreeMono.ttf'
 
 
 
 def main(argv):
-
     """main program - draw and display time and date"""
-
-    papirus = Papirus(rotation = int(argv[0]) if len(sys.argv) > 1 else 0)
-    print('panel = {p:s} {w:d} x {h:d}  version={v:s} COG={g:d} FILM={f:d}'.format(p=papirus.panel, w=papirus.width, h=papirus.height, v=papirus.version, g=papirus.cog, f=papirus.film))
-    papirus.clear()
-    demo(papirus)
+    display = Display(int(argv[0]) if len(sys.argv) > 1 else 0)
+    display.demo()
 
 
-def demo(papirus):
-    """simple partial update demo - draw a clock"""
+    # papirus = Papirus(rotation = )
+    # print('panel = {p:s} {w:d} x {h:d}  version={v:s} COG={g:d} FILM={f:d}'.format(p=papirus.panel, w=papirus.width, h=papirus.height, v=papirus.version, g=papirus.cog, f=papirus.film))
+    # papirus.clear()
+    # demo(papirus)
 
-    # initially set all white background
-    image = Image.new('1', papirus.size, WHITE)
-
-    # prepare for drawing
-    draw = ImageDraw.Draw(image)
-    width, height = image.size
-
-    clock_font_size = int(((width*0.25) - 4)/(5*0.65))      # 5 chars HH:MM
-    clock_font = ImageFont.truetype(CLOCK_FONT_FILE, clock_font_size)
-
-    date_font_size = int((width - 10)/(10*0.65))     # 10 chars YYYY-MM-DD
-    date_font = ImageFont.truetype(DATE_FONT_FILE, date_font_size)
-
-    temp_font_size = int(((width*0.5) - 4)/(5*0.65))      # 5 chars 29 ^C
-    temp_font = ImageFont.truetype(DATE_FONT_FILE, temp_font_size)
-
-    # clear the display buffer
-    draw.rectangle((0, 0, width, height), fill=WHITE, outline=WHITE)
-    previous_minute = 0
-    previous_day = 0
-    sensor = LM75B()
-    previous_temp = ''
-
-    while True:
-        while True:
-            now = datetime.today()
-            tempC = '{c:.0f}'.format(c=sensor.getTempCFloat()) + u"\u00b0" + 'C'
-
-            if now.minute != previous_minute or tempC != previous_temp:
-                break
-
-            time.sleep(0.5)
-
-        if now.day != previous_day:
-            draw.rectangle((2, 2, width - 2, height - 2), fill=WHITE, outline=BLACK)
-            draw.text((10, clock_font_size + 10), '{y:04d}-{m:02d}-{d:02d}'.format(y=now.year, m=now.month, d=now.day), fill=BLACK, font=date_font)
-            previous_day = now.day
-        else:
-            draw.rectangle((5, 10, width - 5, 10 + clock_font_size), fill=WHITE, outline=WHITE)
-
-        #draw.text((5, 10), '{h:02d}:{m:02d}'.format(h=now.hour, m=now.minute), fill=BLACK, font=clock_font)
-        draw_clock(draw, now, clock_font)
-
-        draw.text((104, 10), tempC, fill=BLACK, font=temp_font)
-
-        # display image on the panel
-        papirus.display(image)
-        if now.minute < previous_minute:
-            papirus.update()    # full update every hour
-        else:
-            papirus.partial_update()
-        previous_minute = now.minute
-        previous_temp = tempC
-
-
-def draw_clock(draw, time, font):
-    draw.text((5, 10), '{h:02d}{sep}{m:02d}'.format(h=time.hour, m=time.minute, sep=':' if time.second & 1 else ' '), fill=BLACK, font=font)
-    
 
 
 # main
@@ -136,4 +73,98 @@ if "__main__" == __name__:
     except KeyboardInterrupt:
         sys.exit('interrupted')
         pass
+
+
+
+
+class Display:
+    WHITE = 1
+    BLACK = 0
+
+    CLOCK_FONT_FILE = '/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf'
+    DATE_FONT_FILE  = '/usr/share/fonts/truetype/freefont/FreeMono.ttf'
+
+
+    def __init__(self, rotation):
+        self.papirus = Papirus(rotation=rotation)
+
+        print('panel = {p:s} {w:d} x {h:d}  version={v:s} COG={g:d} FILM={f:d}'.format(p=self.papirus.panel, w=self.papirus.width,
+                                                                                       h=self.papirus.height,
+                                                                                       v=self.papirus.version, g=self.papirus.cog,
+                                                                                       f=self.papirus.film))
+        self.papirus.clear()
+        #self.demo()
+
+
+    def demo(self):
+        """simple partial update demo - draw a clock"""
+
+        # initially set all white background
+        self.image = Image.new('1', self.papirus.size, self.WHITE)
+
+        # prepare for drawing
+        self.draw = ImageDraw.Draw(self.image)
+        self.width, self.height = self.image.size
+
+        clock_font_size = int(((self.width * 0.25) - 4) / (5 * 0.65))  # 5 chars HH:MM
+        clock_font = ImageFont.truetype(self.CLOCK_FONT_FILE, clock_font_size)
+
+        date_font_size = int((self.width - 10) / (10 * 0.65))  # 10 chars YYYY-MM-DD
+        date_font = ImageFont.truetype(self.DATE_FONT_FILE, date_font_size)
+
+        temp_font_size = int(((self.width * 0.5) - 4) / (5 * 0.65))  # 5 chars 29 ^C
+        temp_font = ImageFont.truetype(self.DATE_FONT_FILE, temp_font_size)
+
+        # clear the display buffer
+        self.draw_border()
+        self.draw.rectangle((0, 0, self.width, self.height), fill=self.WHITE, outline=self.WHITE)
+        previous_minute = 0
+        previous_day = 0
+        sensor = LM75B()
+        previous_temp = ''
+
+        while True:
+            while True:
+                now = datetime.today()
+                tempC = '{c:.0f}'.format(c=sensor.getTempCFloat()) + u"\u00b0" + 'C'
+
+                if now.minute != previous_minute or tempC != previous_temp:
+                    break
+
+                time.sleep(0.5)
+
+            if now.day != previous_day:
+                self.draw.rectangle((2, 2, self.width - 2, self.height - 2), fill=self.WHITE, outline=self.BLACK)
+                self.draw.text((10, clock_font_size + 10), '{y:04d}-{m:02d}-{d:02d}'.format(y=now.year, m=now.month, d=now.day),
+                          fill=self.BLACK, font=date_font)
+                previous_day = now.day
+            else:
+                self.draw.rectangle((5, 10, self.width - 5, 10 + clock_font_size), fill=self.WHITE, outline=self.WHITE)
+
+            # draw.text((5, 10), '{h:02d}:{m:02d}'.format(h=now.hour, m=now.minute), fill=BLACK, font=clock_font)
+            self.draw_clock(now, clock_font)
+
+            self.draw.text((104, 10), tempC, fill=self.BLACK, font=temp_font)
+
+            # display image on the panel
+            self.papirus.display(self.image)
+            if now.minute < previous_minute:
+                self.papirus.update()  # full update every hour
+            else:
+                self.papirus.partial_update()
+            previous_minute = now.minute
+            previous_temp = tempC
+
+
+    def clear_display(self):
+        print("clear display")
+
+
+    def draw_border(self):
+        print("draw border")
+
+
+    def draw_clock(self, time, font):
+        self.draw.text((5, 10), '{h:02d}{sep}{m:02d}'.format(h=time.hour, m=time.minute, sep=':' if time.second & 1 else ' '),
+                  fill=self.BLACK, font=font)
 
