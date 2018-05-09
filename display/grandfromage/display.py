@@ -50,30 +50,6 @@ if not (os.path.exists('/dev/gpiomem') and os.access('/dev/gpiomem', os.R_OK | o
 
 
 
-def main(argv):
-    """main program - draw and display time and date"""
-    display = Display(int(argv[0]) if len(sys.argv) > 1 else 0)
-    display.demo()
-
-
-    # papirus = Papirus(rotation = )
-    # print('panel = {p:s} {w:d} x {h:d}  version={v:s} COG={g:d} FILM={f:d}'.format(p=papirus.panel, w=papirus.width, h=papirus.height, v=papirus.version, g=papirus.cog, f=papirus.film))
-    # papirus.clear()
-    # demo(papirus)
-
-
-
-# main
-if "__main__" == __name__:
-    if len(sys.argv) < 1:
-        sys.exit('usage: {p:s}'.format(p=sys.argv[0]))
-
-    try:
-        main(sys.argv[1:])
-    except KeyboardInterrupt:
-        sys.exit('interrupted')
-        pass
-
 
 
 
@@ -168,3 +144,28 @@ class Display:
         self.draw.text((5, 10), '{h:02d}{sep}{m:02d}'.format(h=time.hour, m=time.minute, sep=':' if time.second & 1 else ' '),
                   fill=self.BLACK, font=font)
 
+
+
+def main(argv):
+    """main program - draw and display time and date"""
+    display = Display(int(argv[0]) if len(sys.argv) > 1 else 0)
+    display.demo()
+
+
+    # papirus = Papirus(rotation = )
+    # print('panel = {p:s} {w:d} x {h:d}  version={v:s} COG={g:d} FILM={f:d}'.format(p=papirus.panel, w=papirus.width, h=papirus.height, v=papirus.version, g=papirus.cog, f=papirus.film))
+    # papirus.clear()
+    # demo(papirus)
+
+
+
+# main
+if "__main__" == __name__:
+    if len(sys.argv) < 1:
+        sys.exit('usage: {p:s}'.format(p=sys.argv[0]))
+
+    try:
+        main(sys.argv[1:])
+    except KeyboardInterrupt:
+        sys.exit('interrupted')
+        pass

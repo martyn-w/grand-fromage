@@ -13,4 +13,4 @@ echo "finished modprobe"
 systemctl start epd-fuse.service
 
 
-/grandfromage/display.py
+/grandfromage/sleep.py
