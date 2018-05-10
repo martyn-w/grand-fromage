@@ -6,8 +6,16 @@ volumes:
   mosquitto-config: {}
 
 services:
+
   display:
     build: ./display
+    privileged: true
+    restart: always
+    depends_on:
+      - mosquitto
+
+  tracker:
+    build: ./tracker
     privileged: true
     restart: always
     depends_on:
