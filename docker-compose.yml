@@ -20,6 +20,12 @@ services:
     restart: always
     depends_on:
       - mosquitto
+      - gpsd
+
+  gpsd:
+    build: ./gpsd
+    privileged: true
+    restart: always
 
   mosquitto:
     build: ./mosquitto
