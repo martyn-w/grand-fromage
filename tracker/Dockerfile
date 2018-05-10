@@ -1,4 +1,4 @@
-FROM resin:raspberrypi3-alpine-python
+FROM resin/raspberrypi3-alpine-python
 
 #FROM resin/rpi-raspbian:jessie
 
