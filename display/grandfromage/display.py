@@ -56,6 +56,7 @@ class Display:
 
     BOLD_FONT_FILE = '/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf'
     PLAIN_FONT_FILE  = '/usr/share/fonts/truetype/freefont/FreeMono.ttf'
+    MESSAGE_BROKER = 'mosquitto'
 
 
     def __init__(self, rotation):
@@ -80,17 +81,37 @@ class Display:
         self.date_font = ImageFont.truetype(self.PLAIN_FONT_FILE, 15)
         self.temp_font = ImageFont.truetype(self.BOLD_FONT_FILE, 15)
 
+
+
+
         # clear the display buffer
         self.clear_display_buffer()
 
 
+    # The callback for when the client receives a CONNACK response from the server.
+    def on_connect(self, client, userdata, flags, rc):
+        print("Connected with result code " + str(rc))
+
+        # Subscribing in on_connect() means that if we lose the connection and
+        # reconnect then subscriptions will be renewed.
+        client.subscribe("$SYS/#")
 
 
-    def demo(self):
+    def on_message(self, client, userdata, message):
+        print(message.topic + " " + str(message.payload))
+
+
+
+    def run(self):
         previous_second = 0
         previous_minute = 0
         previous_day = 0
         previous_tempC = ''
+
+        client = mqtt.Client()
+        client.on_connect = self.on_connect
+        client.on_message = self.on_message
+        client.connect(self.MESSAGE_BROKER)
 
         self.clear_display_buffer()
 
@@ -98,6 +119,7 @@ class Display:
         while True:
             while True:
                 now = datetime.today()
+                client.loop()
                 if now.second != previous_second:
                     break
                 time.sleep(0.5)
@@ -134,7 +156,6 @@ class Display:
         self.draw.rectangle((1, 1, self.width - 2, self.height - 2), fill=self.WHITE, outline=self.BLACK)
 
 
-
     def draw_clock(self, time):
         self.draw.rectangle((2, 3, 48, 15), fill=self.WHITE, outline=self.WHITE)
         self.draw.text((3, 3), '{h:02d}{sep}{m:02d}'.format(h=time.hour, m=time.minute, sep=':' if time.second & 1 else ' '),
@@ -154,7 +175,7 @@ class Display:
 def main(argv):
     """main program - draw and display time and date"""
     display = Display(int(argv[0]) if len(sys.argv) > 1 else 0)
-    display.demo()
+    display.run()
 
 
 # main
