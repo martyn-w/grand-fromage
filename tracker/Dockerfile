@@ -13,7 +13,7 @@ FROM resin/raspberrypi3-alpine-python
 
 
 # install mqtt and gps python libraries
-RUN pip install paho-mqtt python-gps geopy
+RUN pip install paho-mqtt gps3 geopy
 
 
 COPY ./bin/docker-entrypoint.sh /bin/
