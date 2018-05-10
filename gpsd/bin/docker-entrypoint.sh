@@ -8,4 +8,4 @@ dpkg-reconfigure tzdata
 stty -F /dev/ttyUSB0 ispeed 9600
 
 # run GPSD in foreground
-gpsd -D 0 -N -n -G /dev/ttyUSB0
+gpsd -D 5 -N -n -G /dev/ttyUSB0
