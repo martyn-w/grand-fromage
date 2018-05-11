@@ -31,4 +31,4 @@ class Report:
             return None
 
     def json(self):
-        return json.dumps(self.msg.__dict__)
+        return json.dumps(self.msg)
