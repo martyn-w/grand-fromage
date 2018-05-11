@@ -6,7 +6,7 @@ RUN apk add --no-cache --update tzdata mosquitto \
     && cp /usr/share/zoneinfo/Europe/London /etc/localtime \
     && echo "Europe/London" > /etc/timezone \
     && apk del tzdata \
-    && adduser --system --disabled-password --disabled-login mosquitto
+    && adduser -S -D mosquitto
 
 COPY ./config /mosquitto/config
 COPY ./bin/docker-entrypoint.sh /bin/
