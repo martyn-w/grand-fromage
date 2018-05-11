@@ -1,10 +1,14 @@
 FROM resin/raspberry-pi2-alpine:3.7
 
-RUN apk add gpsd
+RUN sleep 99999
 
-COPY ./bin/docker-entrypoint.sh /bin/
-
-CMD ["sh", "/bin/docker-entrypoint.sh"]
+#
+#RUN apk update \
+#    && apk add gpsd
+#
+#COPY ./bin/docker-entrypoint.sh /bin/
+#
+#CMD ["sh", "/bin/docker-entrypoint.sh"]
 
 
 #FROM resin/rpi-raspbian:jessie
