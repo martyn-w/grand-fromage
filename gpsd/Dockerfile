@@ -1,24 +1,12 @@
 FROM resin/raspberry-pi2-alpine:3.7
 
-CMD sleep 99
-
-#
-#RUN apk update \
-#    && apk add gpsd
-#
-#COPY ./bin/docker-entrypoint.sh /bin/
-#
-#CMD ["sh", "/bin/docker-entrypoint.sh"]
+RUN apk update \
+    && apk add gpsd tzdata \
+    && cp /usr/share/zoneinfo/Europe/London /etc/localtime \
+    && echo "Europe/London" > /etc/timezone \
+    && apk del tzdata
 
 
-#FROM resin/rpi-raspbian:jessie
-#
-## Install needed packages
-#RUN apt-get -q update \
-#    && apt-get -qy install gpsd \
-#    # Remove package lists to free up space
-#    && rm -rf /var/lib/apt/lists/*
-#
-#COPY ./bin/docker-entrypoint.sh /bin/
-#
-#CMD ["bash", "/bin/docker-entrypoint.sh"]
+COPY ./bin/docker-entrypoint.sh /bin/
+
+CMD ["bash", "/bin/docker-entrypoint.sh"]
