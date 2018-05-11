@@ -1,6 +1,6 @@
 FROM resin/raspberry-pi2-alpine:3.7
 
-RUN sleep 99999
+CMD sleep 99
 
 #
 #RUN apk update \
