@@ -8,27 +8,19 @@ import json
 
 class Report:
 
-    def __init__(self, msg):
-        self.msg = json.loads(msg)
-        self.report_class = self.get_report_class()
-        self.is_tpv_fix = self.get_is_tpv_fix()
+    def __init__(self, json_data):
+        self.json_data = json_data
+        obj_data = json.loads(json_data)
 
-    def get_report_class(self):
-        if self.msg is not None and 'class' in self.msg:
-            return self.msg['class']
+        if obj_data is not None \
+                and 'class' in obj_data \
+                and obj_data['class'] == 'TPV' \
+                and 'mode' in obj_data \
+                and obj_data['mode'] >= 2 \
+                and 'lat' in obj_data \
+                and 'lon' in obj_data:
+            self.is_tpv_fix = True
+            self.lat_lon = (obj_data['lat'], obj_data['lon'])
         else:
-            return None
-
-    def get_is_tpv_fix(self):
-        return (self.report_class == 'TPV'
-            and 'mode' in self.msg
-            and self.msg['mode'] >= 2)
-
-    def lat_lon(self):
-        if self.is_tpv_fix:
-            return (self.msg['lat'], self.msg['lon'])
-        else:
-            return None
-
-    def json(self):
-        return json.dumps(self.msg)
+            self.is_tpv_fix = False
+            self.lat_lon = None

@@ -1,11 +1,9 @@
-# Settings for Grand Fromage
+# Settings for GrandFromage
 
-NAME = "wensleydale"                    # the name of the thing which Grand Fromage is monitoring
-
-BASE_TOPIC = "grandfromage"             # the base MQTT topic
+GPSD_SERVER = "gpsd"
+MOSQUITTO_SERVER = "mosquitto"
+MOSQUITTO_BASE_NAME = "wensleydale"     # the name of the thing which Grand Fromage is monitoring
 
 TRACKER_SIGNIFICANT_DISTANCE_METERS = 5 # meters, the minimum distance moved before the tracker logs the new location
 TRACKER_PING_FREQUENCY = 60 * 60 * 3    # seconds, log the location after the specified time even if there is no significant distance
 
-MOSQUITTO_SERVER = "mosquitto"
-GPSD_SERVER = "gpsd"

@@ -20,16 +20,16 @@ from __future__ import print_function
 
 import os
 import sys
-
+import time
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 from datetime import datetime
-import time
 from papirus import Papirus
 from papirus import LM75B
 import paho.mqtt.client as mqtt
 
+import settings
 
 
 # Check EPD_SIZE is defined
@@ -81,9 +81,6 @@ class Display:
         self.date_font = ImageFont.truetype(self.PLAIN_FONT_FILE, 15)
         self.temp_font = ImageFont.truetype(self.BOLD_FONT_FILE, 15)
 
-
-
-
         # clear the display buffer
         self.clear_display_buffer()
 
@@ -94,7 +91,7 @@ class Display:
 
         # Subscribing in on_connect() means that if we lose the connection and
         # reconnect then subscriptions will be renewed.
-        client.subscribe("$SYS/#")
+        client.subscribe("{}/#".format(settings.MOSQUITTO_BASE_NAME))
 
 
     def on_message(self, client, userdata, message):
