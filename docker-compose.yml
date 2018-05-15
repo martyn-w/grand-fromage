@@ -39,6 +39,13 @@ services:
 
   thermometers:
     build: ./thermometers
+    labels:
+      io.resin.features.kernel-modules: '1'
+    devices:
+      - "/dev/mem:/dev/mem"
+      - "/sys/bus/w1/devices:/sys/bus/w1/devices"
+
+
 #    volumes:
 #      - "/sys/bus/w1/devices:/sys/bus/w1/devices"
 #    devices:
