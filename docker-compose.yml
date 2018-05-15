@@ -44,6 +44,7 @@ services:
     devices:
       - "/dev/mem:/dev/mem"
       #- "/sys/bus/w1/devices:/sys/bus/w1/devices"
+    privileged: true
 
 
 #    volumes:
