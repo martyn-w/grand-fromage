@@ -37,21 +37,18 @@ services:
       - "1883:1883"
       - "9001:9001"
 
-
-
-
-
   thermometers:
     build: ./thermometers
     volumes:
       - "/sys/bus/w1/devices:/sys/bus/w1/devices"
     devices:
       - "/dev/mem:/dev/mem"
-      #- "/dev/i2c-1:/dev/i2c-1"
-      #- "/dev/mem:/dev/mem"
-
-    #privileged: true
     labels:
       io.resin.features.kernel-modules: '1'
     depends_on:
       - mosquitto
+
+# devices:
+#      - "/dev/i2c-1:/dev/i2c-1"
+#      - "/dev/mem:/dev/mem"
+# privileged: true
