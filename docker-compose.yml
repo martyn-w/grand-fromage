@@ -36,3 +36,14 @@ services:
     ports:
       - "1883:1883"
       - "9001:9001"
+
+  thermometers:
+    build: ./thermometers
+    #privileged: true
+    labels:
+      io.resin.features.kernel-modules: '1'
+    devices:
+      - "/dev/i2c-1:/dev/i2c-1"
+      - "/dev/mem:/dev/mem"
+    depends_on:
+      - mosquitto
