@@ -39,8 +39,8 @@ services:
 
   thermometers:
     build: ./thermometers
-    volumes:
-      - "/sys/bus/w1/devices:/sys/bus/w1/devices"
+#    volumes:
+#      - "/sys/bus/w1/devices:/sys/bus/w1/devices"
 #    devices:
 #      - "/dev/mem:/dev/mem"
 #    labels:
