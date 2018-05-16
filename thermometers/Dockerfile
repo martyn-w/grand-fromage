@@ -10,6 +10,9 @@ FROM resin/rpi-raspbian:jessie
 #    && pip install --upgrade pip \
 #    && pip install paho-mqtt
 
+RUN apt update && apt install i2c-tools
+
+
 
 COPY ./bin/docker-entrypoint.sh /bin/
 COPY ./grandfromage/ /grandfromage/
