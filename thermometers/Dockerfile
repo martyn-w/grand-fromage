@@ -10,13 +10,14 @@ FROM resin/rpi-raspbian:jessie
 #    && pip install --upgrade pip \
 #    && pip install paho-mqtt
 
-RUN apt update && apt install i2c-tools
+RUN apt-get update \
+    && apt-get install i2c-tools owfs
 
 
 
 COPY ./bin/docker-entrypoint.sh /bin/
 COPY ./grandfromage/ /grandfromage/
+COPY ./conf/owfs.conf /etc/owfs.conf
 
 
 CMD ["bash", "/bin/docker-entrypoint.sh"]
-
