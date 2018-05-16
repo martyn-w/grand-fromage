@@ -48,8 +48,10 @@ services:
       #- "/sys/bus/w1/devices:/sys/bus/w1/devices"
     privileged: true
     cap_add:
-        - SYS_RAWIO
-        - ALL
+      - SYS_RAWIO
+      - ALL
+    ports:
+      - "2121:2121"
 
 
 #    volumes:

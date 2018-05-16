@@ -11,7 +11,7 @@ FROM resin/rpi-raspbian:jessie
 #    && pip install paho-mqtt
 
 RUN apt-get update \
-    && apt-get install i2c-tools owfs
+    && apt-get install i2c-tools owfs ow-shell
 
 
 
