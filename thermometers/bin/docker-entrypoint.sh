@@ -3,9 +3,15 @@
 modprobe i2c-bcm2708
 modprobe i2c-dev
 
+echo "Starting owserver"
+owserver -c /etc/owfs.conf
 
-while :
-do
-  echo "sleeping"
-  sleep 60
-done
+echo "Running owhttpd"
+owhttpd --foreground -c /etc/owfs.conf
+
+
+# while :
+# do
+#  echo "sleeping"
+#  sleep 60
+# done
