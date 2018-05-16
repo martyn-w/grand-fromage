@@ -1,7 +1,15 @@
-# Tracker
+# Thermometers
 
-#FROM resin/raspberry-pi2-alpine:3.7
 FROM resin/rpi-raspbian:jessie
+
+# Install needed packages
+RUN apt-get -q update \
+    && apt-get -qy install \
+    owfs ow-shell \
+    # Remove package lists to free up space
+    && rm -rf /var/lib/apt/lists/*
+
+
 #
 #RUN apk add --no-cache --update tzdata python py-pip \
 #    && cp /usr/share/zoneinfo/Europe/London /etc/localtime \
@@ -9,9 +17,9 @@ FROM resin/rpi-raspbian:jessie
 #    && apk del tzdata \
 #    && pip install --upgrade pip \
 #    && pip install paho-mqtt
-
-RUN apt-get update \
-    && apt-get install i2c-tools owfs ow-shell
+#
+#RUN apt-get update \
+#    && apt-get install i2c-tools owfs ow-shell
 
 
 
