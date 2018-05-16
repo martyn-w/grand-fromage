@@ -1,11 +1,11 @@
 # Thermometers
 
-FROM resin/rpi-raspbian:jessie
+FROM resin/rpi-raspbian:stretch
 
 # Install needed packages
 RUN apt-get -q update \
     && apt-get -qy install \
-    owfs ow-shell \
+    owfs \
     # Remove package lists to free up space
     && rm -rf /var/lib/apt/lists/*
 

@@ -39,19 +39,21 @@ services:
 
   thermometers:
     build: ./thermometers
-    labels:
-      io.resin.features.kernel-modules: '1'
-      io.resin.features.supervisor-api: '1'
-    devices:
-      - "/dev/mem:/dev/mem"
-      - "/dev/gpiomem:/dev/gpiomem"
-      #- "/sys/bus/w1/devices:/sys/bus/w1/devices"
-    privileged: true
-    cap_add:
-      - SYS_RAWIO
-      - ALL
     ports:
       - "2121:2121"
+      
+#    labels:
+#      io.resin.features.kernel-modules: '1'
+
+#      io.resin.features.supervisor-api: '1'
+#    devices:
+#      - "/dev/mem:/dev/mem"
+#      - "/dev/gpiomem:/dev/gpiomem"
+#      #- "/sys/bus/w1/devices:/sys/bus/w1/devices"
+#    privileged: true
+#    cap_add:
+#      - SYS_RAWIO
+#      - ALL
 
 
 #    volumes:
