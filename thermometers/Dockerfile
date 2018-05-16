@@ -5,7 +5,7 @@ FROM resin/rpi-raspbian:stretch
 # Install needed packages
 RUN apt-get -q update \
     && apt-get -qy install \
-    i2c-tools owfs \
+    owfs \
     # Remove package lists to free up space
     && rm -rf /var/lib/apt/lists/*
 
