@@ -43,6 +43,8 @@ services:
       - "2121:2121"
     labels:
       io.resin.features.kernel-modules: '1'
+    privileged: true
+
 
 #      io.resin.features.supervisor-api: '1'
 #    devices:
