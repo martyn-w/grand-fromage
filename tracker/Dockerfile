@@ -7,7 +7,7 @@ RUN apk add --no-cache --update tzdata python py-pip \
     && echo "Europe/London" > /etc/timezone \
     && apk del tzdata \
     && pip install --upgrade pip \
-    && pip install paho-mqtt gps3 geopy pyownet
+    && pip install paho-mqtt gps3 geopy pyownet apscheduler
 
 
 COPY ./bin/docker-entrypoint.sh /bin/
