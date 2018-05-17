@@ -17,6 +17,8 @@ services:
   tracker:
     build: ./tracker
     privileged: true
+    labels:
+      io.resin.features.kernel-modules: '1'
     restart: always
     depends_on:
       - mosquitto
