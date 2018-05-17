@@ -21,11 +21,7 @@ services:
     depends_on:
       - mosquitto
       - gpsd
-
-  gpsd:
-    build: ./gpsd
-    privileged: true
-    restart: always
+      - owserver
 
   mosquitto:
     build: ./mosquitto
@@ -36,6 +32,11 @@ services:
     ports:
       - "1883:1883"
       - "9001:9001"
+
+  gpsd:
+    build: ./gpsd
+    privileged: true
+    restart: always
 
   owserver:
     build: ./owserver
