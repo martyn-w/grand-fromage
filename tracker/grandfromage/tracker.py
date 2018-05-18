@@ -58,8 +58,7 @@ class Tracker:
         else:
             return self.last_ping + timedelta(0,settings.TRACKER_PING_FREQUENCY) < datetime.utcnow()
 
-    def report_ow_sensors(self):
-        print "Reading 1-wire sensors"
+    def report_sensors(self):
         data =  {}
         for sensor in self.owproxy.dir():
             try:
@@ -67,7 +66,7 @@ class Tracker:
                 type = self.owproxy.read(sensor + 'type')
                 temp_s = self.owproxy.read(sensor + 'temperature')
                 temp_f = float(temp_s)
-                print "%s (%s): %.3f" % (id, type, temp_f)
+                print "%s (%s): %.3f *C" % (id, type, temp_f)
                 data[id] = {'type': type, 'temp': temp_f}
             except ValueError:
                 print "Could not convert value '%s' to a float" % (temp_s)
@@ -76,19 +75,12 @@ class Tracker:
 
         if self.bmp180:
             try:
-                print "Reading BMP180 sensor"
                 id = 'bmp180'
                 type = 'bmp180'
                 temp_f = self.bmp180.read_temperature()
-                pres_f = self.bmp180.read_pressure()
-
-                print('Temp = {0:0.2f} *C'.format(temp_f))
-                print('Pressure = {0:0.2f} Pa'.format(pres_f))
-
-                print('Altitude = {0:0.2f} m'.format(self.bmp180.read_altitude()))
-                print('Sealevel Pressure = {0:0.2f} Pa'.format(self.bmp180.read_sealevel_pressure()))
-
-                data[id] = {'type': type, 'temp': temp_f, 'pres': pres_f}
+                pres_l = self.bmp180.read_pressure()
+                print "%s: %.3f *C, %s Pa" % (id, temp_f, pres_l)
+                data[id] = {'type': type, 'temp': temp_f, 'pres': pres_l}
             except:
                 print "Unexpected error:", sys.exc_info()[0]
 
@@ -98,7 +90,7 @@ class Tracker:
 
     def run(self):
         scheduler = BackgroundScheduler()
-        scheduler.add_job(self.report_ow_sensors, 'interval', seconds=settings.SENSOR_READ_FREQUENCY)
+        scheduler.add_job(self.report_sensors, 'interval', seconds=settings.SENSOR_READ_FREQUENCY)
         scheduler.start()
 
         try:
