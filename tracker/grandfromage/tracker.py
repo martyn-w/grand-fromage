@@ -75,12 +75,13 @@ class Tracker:
 
         if self.bmp180:
             try:
-                id = 'bmp180'
-                type = 'bmp180'
+                id = 'BMP180'
+                type = 'BMP180'
                 temp_f = self.bmp180.read_temperature()
                 pres_l = self.bmp180.read_pressure()
-                print "%s: %.3f *C, %s Pa" % (id, temp_f, pres_l)
-                data[id] = {'type': type, 'temp': temp_f, 'pres': pres_l}
+                alt_f = self.bmp180.read_altitude() # take this value with a pinch of salt; it is more useful for determining changes in altitude
+                print "%s: %.3f *C, %s Pa, %.1f m" % (id, temp_f, pres_l, alt_f)
+                data[id] = {'type': type, 'temp': temp_f, 'pres': pres_l, 'alt': alt_f}
             except:
                 print "Unexpected error:", sys.exc_info()[0]
 
