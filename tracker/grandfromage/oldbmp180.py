@@ -62,6 +62,8 @@ data = bus.read_i2c_block_data(0x77, 0xF6, 2)
 # Convert the data
 temp = data[0] * 256 + data[1]
 
+print "TEMP: %s" % temp
+
 # BMP180 address, 0x77(119)
 # Select measurement control register, 0xF4(244)
 #		0x74(116)	Enable pressure measurement, OSS = 1
@@ -76,6 +78,8 @@ data = bus.read_i2c_block_data(0x77, 0xF6, 3)
 
 # Convert the data
 pres = ((data[0] * 65536) + (data[1] * 256) + data[2]) / 128
+
+print "PRES: %s" % pres
 
 # Callibration for Temperature
 X1 = (temp - AC6) * AC5 / 32768.0

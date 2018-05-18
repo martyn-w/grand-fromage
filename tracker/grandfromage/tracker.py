@@ -17,6 +17,7 @@ from datetime import datetime, timedelta
 import geopy.distance
 from apscheduler.schedulers.background import BackgroundScheduler
 import pyownet
+import Adafruit_BMP.BMP085 as BMP085
 
 # local classes
 from report import Report
@@ -34,7 +35,7 @@ class Tracker:
         self.gps_socket.watch()
 
         self.owproxy = pyownet.protocol.proxy(host=settings.OW_SERVER, port=4304, flags=0, persistent=False, verbose=False)
-
+        self.bmp180 = BMP085.BMP085(mode=BMP085.BMP085_ULTRAHIGHRES)
         self.previous_position = None
         self.last_ping = None
 
@@ -72,6 +73,25 @@ class Tracker:
                 print "Could not convert value '%s' to a float" % (temp_s)
             except:
                 print "Unexpected error:", sys.exc_info()[0]
+
+        if self.bmp180:
+            try:
+                print "Reading BMP180 sensor"
+                id = 'bmp180'
+                type = 'bmp180'
+                temp_f = self.bmp180.read_temperature()
+                pres_f = self.bmp180.read_pressure()
+
+                print('Temp = {0:0.2f} *C'.format(temp_f))
+                print('Pressure = {0:0.2f} Pa'.format(pres_f))
+
+                print('Altitude = {0:0.2f} m'.format(self.bmp180.read_altitude()))
+                print('Sealevel Pressure = {0:0.2f} Pa'.format(self.bmp180.read_sealevel_pressure()))
+
+                data[id] = {'type': type, 'temp': temp_f, 'pres': pres_f}
+            except:
+                print "Unexpected error:", sys.exc_info()[0]
+
         if data:
             data['utc'] = datetime.utcnow().isoformat()
             paho.mqtt.publish.single(self.TOPIC_SENSORS_VALUES, json.dumps(data), hostname=settings.MOSQUITTO_SERVER)
