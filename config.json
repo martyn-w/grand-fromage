@@ -16,14 +16,27 @@
             "name": "Kitchen Speakers",
             "room": "Bathroom/Kitchen",
             "accessory": "Sonos"
+        },
+        {
+            "name": "Living Room Speakers",
+            "room": "Living Room",
+            "accessory": "Sonos"
         }
     ],
     "platforms": [
         {
-            "platform": "config",
-            "port": 80,
             "name": "Homebridge Config UI",
-            "restart": "bash ./balena-restart.sh"
+            "port": 80,
+            "auth": "form",
+            "theme": "purple",
+            "restart": "bash ./balena-restart.sh",
+            "tempUnits": "c",
+            "lang": "auto",
+            "platform": "config"
+        },
+        {
+            "platform": "rpi-camera",
+            "cameras": [{"name": "Pi Camera"}]
         }
     ]
 }
