@@ -1,0 +1,29 @@
+{
+    "bridge": {
+        "name": "Homebridge",
+        "username": "00:11:22:33:44:55",
+        "port": 51826,
+        "pin": "124-81-248"
+    },
+    "description": "balenaCloud app for Homebridge",
+    "accessories": [
+        {
+            "name": "Bedroom Speakers",
+            "room": "Master Bedroom",
+            "accessory": "Sonos"
+        },
+        {
+            "name": "Kitchen Speakers",
+            "room": "Bathroom/Kitchen",
+            "accessory": "Sonos"
+        }
+    ],
+    "platforms": [
+        {
+            "platform": "config",
+            "port": 80,
+            "name": "Homebridge Config UI",
+            "restart": "bash ./balena-restart.sh"
+        }
+    ]
+}
