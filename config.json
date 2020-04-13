@@ -48,7 +48,9 @@
             "platform": "rpi-camera",
             "cameras": [
                 {
-                    "name": "Pi Camera"
+                    "name": "Pi Camera",
+                    "rotate": 0,
+                    "verticalFlip": true
                 }
             ]
         }
