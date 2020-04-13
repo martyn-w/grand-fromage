@@ -49,8 +49,7 @@
             "cameras": [
                 {
                     "name": "Pi Camera",
-                    "rotate": 0,
-                    "verticalFlip": true
+                    "rotate": 180
                 }
             ]
         }
