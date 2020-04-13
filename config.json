@@ -21,6 +21,16 @@
             "name": "Living Room Speakers",
             "room": "Living Room",
             "accessory": "Sonos"
+        },
+        {
+            "accessory": "BME280",
+            "name": "Sensor",
+            "name_temperature": "Temperature",
+            "name_humidity": "Humidity",
+            "options": {
+                "i2cBusNo": 1,
+                "i2cAddress": "0x77"
+            }
         }
     ],
     "platforms": [
@@ -36,7 +46,11 @@
         },
         {
             "platform": "rpi-camera",
-            "cameras": [{"name": "Pi Camera"}]
+            "cameras": [
+                {
+                    "name": "Pi Camera"
+                }
+            ]
         }
     ]
 }
